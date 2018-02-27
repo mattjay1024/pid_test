@@ -21,7 +21,10 @@ int main(int argc, char** argv) {
 	ros::Rate r(5);
 	int target = 0;
 	
-	PID controller;
+	PID controller(0.4, 0.5, 0.1, 1.0
+
+);
+	controller.target(targets[target]);
 
 	while(ros::ok() && target < targets.size()) {
 		update = controller.update(output_value, PID::terms_t::P | PID::terms_t::I);
@@ -30,7 +33,11 @@ int main(int argc, char** argv) {
 
 		ROS_INFO("Target: %f | Actual: %f | Update: %f", targets[target], last_output, update);
 		
-		if(rough_equals(output_value, targets[target], 0.005)) target++;
+		if(rough_equals(output_value, targets[target], 0.3)) {
+			ROS_INFO("HIT Target: %f | Actual: %f", targets[target], output_value);
+			target++;
+			controller.target(targets[target]);
+		}
 		
 		r.sleep();
 	}

@@ -29,7 +29,7 @@ class PID {
 
 			// proportional term calculation
 			double last_p_error = p_error;
-			p_error = current - goal; // proportional error, accounting for present error
+			p_error = goal - current; // proportional error, accounting for present error
 
 			// integral term calculation
 			i_error = i_error + (p_error * dt.count()); // integral error accounts for past changes in error
@@ -58,7 +58,10 @@ class PID {
 			reset();
 		};
 
-		void target(double t) { goal = t; };
+		void target(double t) { 
+			goal = t;
+			reset();
+		 };
 		
 		void reset() { // sets errors to zero
 			p_error = i_error = d_error = 0;
